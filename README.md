@@ -27,4 +27,4 @@ The geometry generator refuses to replace existing generated files unless `--ove
 
 ## Planned experiments
 
-The first pilot compares beta zero with beta approximately `1.91985e-11 m-1 s-1` while holding centre f fixed. ACCESS-NRI generator and runner versions require pinning and an end-to-end compatibility check before this is used to run MOM6. The development generator passed a scratch branch and UUID test; see the local context notes for details. Experiment plans and actual runs have not been created in this repository.
+The first pilot compares beta zero with beta approximately `1.91985e-11 m-1 s-1` while holding centre f fixed. ACCESS-NRI generator and runner versions require pinning and an end-to-end compatibility check before this is used to run MOM6. The development generator passed a scratch branch and UUID test; see the local context notes for details. A provisional two-day generator plan and separate case-input preparation are in `experiments/` and `initialisation/prepare_beta_pilot.py`; they have been checked on a disposable copy, but no model jobs have been submitted.

@@ -1,0 +1,28 @@
+# Provisional local plan: review before running. This pins the committed baseline;
+# update start_point after reviewing/committing later configuration changes.
+model_type: mom6
+repository_url: /g/data/fu5/users/rd7475/github/mom6-eddy-experiments
+start_point: "c488f9730902c1002fe3c3b667b10100c3c884c7"
+test_path: /scratch/fu5/rd7475/tmp/mom6-eddy-beta-pilot
+repository_directory: experiment
+control_branch_name: ctrl
+keep_uuid: false
+new_uuid: false
+Control_Experiment:
+  input.nml:
+    ocean_solo_nml:
+      months: 0
+      days: 2
+Perturbation_Experiment:
+  beta_pilot:
+    branches:
+      - beta_0
+      - beta_33s
+    MOM_input:
+      BETA:
+        - 0.0
+        - 1.91985e-11
+    config.yaml:
+      input:
+        - /g/data/fu5/users/rd7475/github/mom6-eddy-experiments/input/cases/beta_0
+        - /g/data/fu5/users/rd7475/github/mom6-eddy-experiments/input/cases/beta_33s

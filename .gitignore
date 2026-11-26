@@ -12,3 +12,6 @@
 
 /input/geometry-provenance.json
 /input/initialization-provenance.json
+
+/input/cases/
+/input/case-provenance/
