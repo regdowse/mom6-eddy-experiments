@@ -1,0 +1,27 @@
+ncpus: 25
+walltime: 00:30:00
+jobname: eddy-beta-control
+project: fu5
+queue: normal
+model: mom6
+# Provisional legacy build; verify and retain before using for scientific runs.
+exe: /g/data/fu5/users/rd7475/github/phd/idealised_modelling/mom6_sandbox/mom6-ninja-nci/ocean_only_symmetric/MOM6
+input: /g/data/fu5/users/rd7475/github/mom6-eddy-experiments/input
+laboratory: /scratch/fu5/rd7475/tmp/mom6-eddy-experiments
+experiment_prefix: eddy-beta-control
+modules:
+    load:
+        - python3/3.11.7
+        - intel-compiler/2021.10.0
+        - netcdf/4.9.2
+storage:
+    gdata:
+        - fu5
+    scratch:
+        - fu5
+collate: false
+mpi:
+    module: openmpi/4.1.2
+qsub_flags: -W umask=027
+restart_freq: 1
+runlog: false

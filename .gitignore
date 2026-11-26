@@ -1,0 +1,14 @@
+/work
+/archive
+/manifests/
+/input/*.nc
+/initialisation/reference/*.nc
+/initialisation/__pycache__/
+/analysis/__pycache__/
+.pytest_cache/
+*.pyc
+*.o[0-9]*
+*.e[0-9]*
+
+/input/geometry-provenance.json
+/input/initialization-provenance.json
