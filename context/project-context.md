@@ -1,0 +1,73 @@
+# Idealised MOM6 eddy experiments: project context
+
+Recorded 26 November 2026. Working notes for discussion, not an approved experiment design.
+
+## Purpose and working preferences
+
+- The idealised tests will support the next paper and final PhD chapter. The scientific question and experiment matrix remain to be agreed with Reg.
+- `mom6-eddy-exp1-layer-vortdiag/` is the current sandbox reference: isopycnal layers with vorticity diagnostics. It is a starting point, not yet a frozen or independently verified production control.
+- At this stage, discuss and plan; do not implement experiment infrastructure, modify existing experiments or submit jobs. Context notes may be written in this folder.
+- The two manuscript repositories are background material and must not be modified.
+- Reg wants a robust, efficient, traceable workflow and wishes to use ACCESS-NRI resources when appropriate. The generator is a promising default to evaluate, not a substitute for scientific design or validation.
+
+## Current reference: findings from local notes
+
+See [run notes](../../phd/idealised_modelling/mom6_sandbox/mom6-eddy-exp1-layer-vortdiag/LOCAL_RUN.md), [diagnostic specification](../../phd/idealised_modelling/mom6_sandbox/mom6-eddy-exp1-layer-vortdiag/DIAGNOSTICS.md), [initialisation parameters](../../phd/idealised_modelling/mom6_sandbox/mom6-eddy-exp1-layer-vortdiag/initialisation/config.yaml), [Payu configuration](../../phd/idealised_modelling/mom6_sandbox/mom6-eddy-exp1-layer-vortdiag/config.yaml), and [budget results](../../phd/idealised_modelling/mom6_sandbox/mom6-eddy-exp1-layer-vortdiag/analysis/budget/README.md).
+
+- Initial state: circular cyclonic Gaussian eddy, 50 km maximum-speed radius, 0.20 m/s surface speed, exponential 500 m e-folding depth, zero imposed tilt; 10 fixed-temperature layers. Nonzero beta uses an approximate centre-f balance; collapsed bottom layers also involve approximations.
+- The recorded 31-day run produced native-layer and remapped daily output. The budget README reports successful runtime checks and a 0.0080% aggregate momentum-curl residual relative to net tendency; this does not establish PV closure or scientific suitability for every question.
+- Active mixing and drag mean this is not an adiabatic experiment. Heat/freshwater forcing is disabled for compatibility with the present fixed-density layer setup. Diagnostic and averaging limitations are documented in DIAGNOSTICS.md.
+- Documentation includes historical statements that later sections supersede: LOCAL_RUN.md says 9 CPUs while the current config specifies 25, and contains deferred-check language superseded in part by the budget README. The archived controls and actual input files should be checked before freezing a baseline. The recorded run used preserved initial inputs; current controls have since had diagnostic requests corrected.
+- `config.yaml` points to local executable and input paths, and the experiment sits within the broader PhD Git repository; the portable source, exact code revision/build, inputs and generated-file provenance need deliberate assessment.
+
+## Scientific context supplied by Reg
+
+- [Geometric framework for mapping ocean eddies](https://github.com/regdowse/A-Geometric-Framework-for-Mapping-Ocean-Eddies-Using-Elliptical-Streamfunction-Parameterisation); related [preprint](https://doi.org/10.5194/egusphere-2026-3599). Its geometric streamfunction framework includes SOLO, DOPPIO and LATTE approaches and three-dimensional eddy characterisation.
+- [Tilting of mesoscale ocean eddies in the Tasman Sea](https://github.com/regdowse/Tilting-of-Mesoscale-Ocean-Eddies-in-The-Tasman-Sea).
+- Both repositories are private. Their manuscript sources were subsequently read through the authenticated GitHub connection on 26 November 2026: [geometric-framework source](https://github.com/regdowse/A-Geometric-Framework-for-Mapping-Ocean-Eddies-Using-Elliptical-Streamfunction-Parameterisation/blob/main/template.tex) (blob `57f4a1ccee65c873f86aa12d587d3eb45d1b4243`) and [tilt manuscript source](https://github.com/regdowse/Tilting-of-Mesoscale-Ocean-Eddies-in-The-Tasman-Sea/blob/main/agujournaltemplate.tex) (blob `5fd356395d0a3bc08749bd7e923099a79b467392`). Findings refer to these manuscript versions and may evolve.
+- ESP fits an elliptical Gaussian streamfunction to velocity fields to estimate centre, geometry and dynamics. SOLO uses one transect, DOPPIO two orthogonal transects, and LATTE unstructured or multi-platform observations. Applying fits by depth and time enables centreline and tilt analysis; noise, sampling and background flow affect inference.
+- The tilt manuscript applies ESP to a 1994–2019 EAC regional simulation, with 3,097 tracked eddies and 106,865 valid tilt estimates. Its Delta estimator combines adjacent-depth displacements across neighbouring days to estimate a representative tilt axis; reported tilt direction is deep-to-surface. Median distances are 18.6 km for anticyclones and 15.5 km for cyclones.
+- In deep planetary-dominated conditions, anticyclones preferentially align with the estimated local PV gradient and cyclones oppose it. In shallow topographic-dominated conditions cyclones preferentially oppose the gradient; anticyclones show weaker along-gradient organisation and a pronounced perpendicular component in composite centre profiles. Greater deformation and weaker subsurface angular velocity are associated with larger tilt.
+- These are regional associations, not isolated causes. The manuscript highlights planetary beta, differential background advection, and bathymetric constraint as candidate mechanisms requiring targeted tests. Its PV-gradient proxy is not full Ertel PV, and composite profiles share data and selection with the Delta estimator. These motivate possible process experiments, but Reg has not yet specified the new paper's question or approved a matrix.
+
+## ACCESS-NRI resources and advice
+
+- [Idealised MOM6 configurations](https://mom6-idealised-configs--17.org.readthedocs.build/) and [ANU-tub](https://mom6-idealised-configs--17.org.readthedocs.build/configurations/anu-tub/) (prototype; initial web request unavailable). A local ANU-tub page is in the reference experiment's `documentation/docs/pages/configurations/anu-tub.md`.
+- [Experiment generator](https://github.com/ACCESS-NRI/access-experiment-generator), [documentation](https://access-experiment-generator.access-hive.org.au/), [experiment runner](https://github.com/ACCESS-NRI/access-experiment-runner), [tutorial](https://www.youtube.com/watch?v=1a87GbztSUo).
+- [ACCESS-OM3 experiment repository](https://github.com/ACCESS-Community-Hub/access-om3-experiments), [provenance examples](https://access-om3-configs.access-hive.org.au/latest/Experiments/), and [agentic optimisation example](https://github.com/ACCESS-NRI/access-agentic-optimisation/blob/main/AGENTS.md).
+- Chris Bull's 6 November 2026 email describes a generator trial with control and IC variants, but no model run. He advises listing all candidate IC files under Payu `input:` and selecting via the appropriate MOM_input setting; changing that list by branch duplicated an entry in his trial. IC selection applies on cold starts. His example used `module use /g/data/vk83/prerelease/modules && module load payu/dev`; verify the installed version and actual behaviour at implementation time. These are trial observations, not guarantees for this configuration.
+- Chris suggested considering a western slope, depending on domain and scientific aim, because sidewalls affect vorticity balance; see the [cited paper](https://journals.ametsoc.org/view/journals/phoc/31/10/1520-0485_2001_031_2871_wwbcir_2.0.co_2.xml). This is scientific advice to evaluate, not a decision to add a slope.
+
+## Discussion sketch, not an implementation plan
+
+1. Agree the primary physical question, hypotheses, comparison metrics and timescales. Identify whether tilt, boundaries/topography, beta, eddy structure or other mechanisms are central before selecting a sweep.
+2. Audit the candidate control against the actual archived run: configuration and generated inputs, code/build identity, diagnostics and restart/cold-start semantics; resolve discrepancies and agree acceptance checks.
+3. Design a small control plus targeted contrasts, separating scientific parameter changes from numerical sensitivity and checking boundaries, conservation, adjustment and budget limitations. Estimate runtime and output volume before expanding.
+4. Design provenance linking an immutable base revision, generator plan, per-experiment changes, input-generation parameters and checksums, executable/build, run UUID, restart lineage, output and analysis version. Decide where large generated files and archives live and how they are retained.
+5. Test generator and runner compatibility with this specific configuration and locally generated ICs in a small pilot before relying on them for a sweep. Decide how IC generation and validation integrate with branch creation; do not assume changing YAML alone regenerates NetCDF files.
+
+Open questions: intended scientific mechanism and paper claim; observational or prior-study connection; experimental boundaries and slopes; measures of tilt and vorticity and needed cadence; control and validation criteria; compute/storage and retention constraints; independent cold starts versus restart-based branches; and ownership/location of the eventual configuration repository.
+
+## Research direction and immediate priority — Reg, 26 November 2026
+
+The paper continues the eddy-tilt climatology and aims to test the effects of planetary and topographic PV gradients. Begin with a simpler configuration without topographic effects, exploring beta = 0 and progressively stronger planetary beta. Reg points to [Yang et al. (2020)](https://doi.org/10.1007/s10236-020-01375-3) as a starting benchmark and describes its result as zero tilt at zero beta and increasing tilt with beta; the published abstract is accessible, but the full published text remains inaccessible; an earlier related 2018 preprint was read separately. See beta-workflow-audit.md for details and limitations. Later, explore topography and background flow, including the hypothesis that opposing planetary and topographic contributions yielding zero net gradient could yield zero tilt. Cancellation and its interpretation are questions to test, not assumed outcomes.
+
+The immediate goal is workflow structure: make changing beta and running multiple configurations simple, with outputs that are easy to find and trace to their exact setups. The current reference has `ROTATION="betaplane"`, `F_0=-1.0E-4 s^-1`, and `BETA=2.0E-11 m^-1 s^-1` in MOM_input. Its initialisation uses a centre-f approximation for nonzero beta. MOM_input reads topography and initial-state NetCDF files; whether the current bathymetry and boundary conditions meet the intended no-topography control needs verification. Initial conditions are separate generated inputs, so determine when beta changes require regeneration or revalidation. Keep cold-start and restart identity explicit. No beta values, experiment matrix, implementation or jobs have yet been approved.
+
+## Centre Coriolis parameter — Reg, 26 November 2026
+
+Reg recalls choosing f to resemble 33°S and plans to vary centre f in future to test its effect on tilt. For the first beta sweep, holding centre f fixed remains a proposed way to isolate the beta gradient; the common value is not yet agreed. Standard spherical estimates with Earth rotation rate 7.292115e-5 s^-1 give f ≈ -7.94e-5 s^-1 and beta ≈ 1.92e-11 m^-1 s^-1 at 33°S. The current centre f = -9.5e-5 s^-1 corresponds to about 40.65°S and the configured F_0 = -1e-4 s^-1 to about 43.29°S under that convention. The reason for the original values is not yet established; inspect their provenance before interpreting. A later latitude-consistent sweep could vary f and beta together; controlled independent f and beta contrasts address different questions. All remain design choices, not approved experiment configurations.
+
+## Agreed 33°S reference — 26 November 2026
+
+Reg chose the 33°S estimates for the proposed reference. Using omega = 7.292115e-5 s^-1 and Earth radius 6,371,000 m: centre f = -7.94314e-5 s^-1 and physical beta = 1.91985e-11 m^-1 s^-1. The first planetary-beta sweep is intended to keep centre f fixed while varying beta, including zero; beta and centre f should both be configurable for later experiments. Exact rounding and control-file implementation are to be settled during implementation. For the present grid centre y = 250,000 m and reference y = 0, using the above nonzero beta requires F_0 ≈ -8.42311e-5 s^-1 to obtain the chosen centre f. Alternatively, reference f directly at the eddy centre after verifying MOM6 and initialization behavior. F_0 must change with beta if the present y reference is retained. Existing sandbox files and runs have not been modified.
+
+Reg supplied the [Yang et al. 2020 publisher link](https://link.springer.com/article/10.1007/s10236-020-01375-3); its abstract is available but the full published article remains subscription-restricted in the available reader. The separate accessible 2018 preprint and its limitations are noted in beta-workflow-audit.md.
+
+## Repository location and domain clarification — Reg, 26 November 2026
+
+Reg proposes the new experiment repository under `/g/data/fu5/users/rd7475/github/`, while leaving the existing sandbox experiments as legacy references. The current configuration has a flat-bottom interior and sloping sidewalls that act as boundaries; the earlier statement that it is simply 'not flat' was misleading. The proposed starting geometry is a much larger domain, at least twice the present square's side length, to move wall boundaries farther from the eddy. Check the actual generated geometry and boundary influence in the proposed control; no assumption that enlarging it completely eliminates wall effects. Reg agrees to assess the ACCESS-NRI tools and pilot two beta configurations. Current request is to discuss repository and experiment organization, not create or implement it.
+
+## Agreed beta-plane reference — 26 November 2026
+
+Reg agrees that the new configuration should place the beta-plane reference at the domain centre, initially also the eddy centre. `F_0` then denotes f at the initial eddy centre; the first beta sweep keeps it at the agreed 33°S estimate and varies BETA. Verify effective MOM6 and initializer conventions and update the reference if domain origin, dimensions or eddy placement change. If the minimum proposed 1000 km square has southern edge y=0, the centre reference is y=500,000 m. This records an agreement, not an implemented change.
